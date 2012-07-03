@@ -42,8 +42,6 @@ namespace Katana.Server.AspNet.Tests
                     WasCalledEnvironment.ShouldContainKey("owin.RequestPath");
                     WasCalledEnvironment.ShouldContainKey("owin.RequestPathBase");
                     WasCalledEnvironment.ShouldContainKey("owin.RequestQueryString");
-                    WasCalledEnvironment.ShouldContainKey("owin.RequestHeaders");
-                    WasCalledEnvironment.ShouldContainKey("owin.RequestBody");
                     WasCalledEnvironment.ShouldContainKey("owin.RequestScheme");
                     WasCalledEnvironment.ShouldContainKey("owin.Version");
                 });

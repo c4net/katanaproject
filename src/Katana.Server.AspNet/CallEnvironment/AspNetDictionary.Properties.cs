@@ -55,83 +55,65 @@ namespace Katana.Server.AspNet.CallEnvironment
             get {return _RequestQueryString;}
             set {_flag0 |= 0x40u; _RequestQueryString = value;} 
         }
-        IDictionary<string, string[]> _RequestHeaders;
-        public IDictionary<string, string[]> RequestHeaders 
-        {
-            get {return _RequestHeaders;}
-            set {_flag0 |= 0x80u; _RequestHeaders = value;} 
-        }
-        object _RequestBody;
-        public object RequestBody 
-        {
-            get {return _RequestBody;}
-            set {_flag0 |= 0x100u; _RequestBody = value;} 
-        }
-        CancellationToken _HostCallDisposed;
-        public CancellationToken HostCallDisposed 
-        {
-            get {return _HostCallDisposed;}
-            set {_flag0 |= 0x200u; _HostCallDisposed = value;} 
-        }
         TextWriter _HostTraceOutput;
         public TextWriter HostTraceOutput 
         {
             get {return _HostTraceOutput;}
-            set {_flag0 |= 0x400u; _HostTraceOutput = value;} 
+            set {_flag0 |= 0x80u; _HostTraceOutput = value;} 
         }
         Action _HostDisableResponseBuffering;
         public Action HostDisableResponseBuffering 
         {
             get {return _HostDisableResponseBuffering;}
-            set {_flag0 |= 0x800u; _HostDisableResponseBuffering = value;} 
+            set {_flag0 |= 0x100u; _HostDisableResponseBuffering = value;} 
         }
         System.Security.Principal.IPrincipal _HostUser;
         public System.Security.Principal.IPrincipal HostUser 
         {
             get {return _HostUser;}
-            set {_flag0 |= 0x1000u; _HostUser = value;} 
+            set {_flag0 |= 0x200u; _HostUser = value;} 
         }
         string _ServerVariableRemoteAddr;
         public string ServerVariableRemoteAddr 
         {
             get {return _ServerVariableRemoteAddr;}
-            set {_flag0 |= 0x2000u; _ServerVariableRemoteAddr = value;} 
+            set {_flag0 |= 0x400u; _ServerVariableRemoteAddr = value;} 
         }
         string _ServerVariableRemoteHost;
         public string ServerVariableRemoteHost 
         {
             get {return _ServerVariableRemoteHost;}
-            set {_flag0 |= 0x4000u; _ServerVariableRemoteHost = value;} 
+            set {_flag0 |= 0x800u; _ServerVariableRemoteHost = value;} 
         }
         string _ServerVariableRemotePort;
         public string ServerVariableRemotePort 
         {
             get {return _ServerVariableRemotePort;}
-            set {_flag0 |= 0x8000u; _ServerVariableRemotePort = value;} 
+            set {_flag0 |= 0x1000u; _ServerVariableRemotePort = value;} 
         }
         string _ServerVariableLocalAddr;
         public string ServerVariableLocalAddr 
         {
             get {return _ServerVariableLocalAddr;}
-            set {_flag0 |= 0x10000u; _ServerVariableLocalAddr = value;} 
+            set {_flag0 |= 0x2000u; _ServerVariableLocalAddr = value;} 
         }
         string _ServerVariableServerPort;
         public string ServerVariableServerPort 
         {
             get {return _ServerVariableServerPort;}
-            set {_flag0 |= 0x20000u; _ServerVariableServerPort = value;} 
+            set {_flag0 |= 0x4000u; _ServerVariableServerPort = value;} 
         }
         RequestContext _RequestContext;
         public RequestContext RequestContext 
         {
             get {return _RequestContext;}
-            set {_flag0 |= 0x40000u; _RequestContext = value;} 
+            set {_flag0 |= 0x8000u; _RequestContext = value;} 
         }
         HttpContextBase _HttpContextBase;
         public HttpContextBase HttpContextBase 
         {
             get {return _HttpContextBase;}
-            set {_flag0 |= 0x80000u; _HttpContextBase = value;} 
+            set {_flag0 |= 0x10000u; _HttpContextBase = value;} 
         }
 
         bool PropertiesContainsKey(string key)
@@ -153,11 +135,7 @@ namespace Katana.Server.AspNet.CallEnvironment
                     {
                         return true;
                     }
-                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "owin.RequestBody", StringComparison.Ordinal)) 
-                    {
-                        return true;
-                    }
-                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
@@ -171,19 +149,19 @@ namespace Katana.Server.AspNet.CallEnvironment
                     {
                         return true;
                     }
-                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
-                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
-                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
-                    if (((_flag0 & 0x20000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
@@ -200,42 +178,32 @@ namespace Katana.Server.AspNet.CallEnvironment
                         return true;
                     }
                    break;
-                case 19:
-                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "owin.RequestHeaders", StringComparison.Ordinal)) 
-                    {
-                        return true;
-                    }
-                   break;
-                case 17:
-                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.CallDisposed", StringComparison.Ordinal)) 
-                    {
-                        return true;
-                    }
-                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
-                    {
-                        return true;
-                    }
-                   break;
                 case 29:
-                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
                    break;
                 case 9:
-                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
+                    {
+                        return true;
+                    }
+                   break;
+                case 17:
+                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
                    break;
                 case 33:
-                    if (((_flag0 & 0x40000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
                    break;
                 case 26:
-                    if (((_flag0 & 0x80000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
                     {
                         return true;
                     }
@@ -266,12 +234,7 @@ namespace Katana.Server.AspNet.CallEnvironment
                         value = RequestPath;
                         return true;
                     }
-                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "owin.RequestBody", StringComparison.Ordinal)) 
-                    {
-                        value = RequestBody;
-                        return true;
-                    }
-                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
                     {
                         value = HostTraceOutput;
                         return true;
@@ -288,22 +251,22 @@ namespace Katana.Server.AspNet.CallEnvironment
                         value = RequestScheme;
                         return true;
                     }
-                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
                     {
                         value = ServerVariableRemoteAddr;
                         return true;
                     }
-                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
                     {
                         value = ServerVariableRemoteHost;
                         return true;
                     }
-                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
                     {
                         value = ServerVariableRemotePort;
                         return true;
                     }
-                    if (((_flag0 & 0x20000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
                     {
                         value = ServerVariableServerPort;
                         return true;
@@ -323,48 +286,36 @@ namespace Katana.Server.AspNet.CallEnvironment
                         return true;
                     }
                    break;
-                case 19:
-                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "owin.RequestHeaders", StringComparison.Ordinal)) 
-                    {
-                        value = RequestHeaders;
-                        return true;
-                    }
-                   break;
-                case 17:
-                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.CallDisposed", StringComparison.Ordinal)) 
-                    {
-                        value = HostCallDisposed;
-                        return true;
-                    }
-                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
-                    {
-                        value = ServerVariableLocalAddr;
-                        return true;
-                    }
-                   break;
                 case 29:
-                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
                     {
                         value = HostDisableResponseBuffering;
                         return true;
                     }
                    break;
                 case 9:
-                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
                     {
                         value = HostUser;
                         return true;
                     }
                    break;
+                case 17:
+                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
+                    {
+                        value = ServerVariableLocalAddr;
+                        return true;
+                    }
+                   break;
                 case 33:
-                    if (((_flag0 & 0x40000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
                     {
                         value = RequestContext;
                         return true;
                     }
                    break;
                 case 26:
-                    if (((_flag0 & 0x80000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
                     {
                         value = HttpContextBase;
                         return true;
@@ -400,15 +351,9 @@ namespace Katana.Server.AspNet.CallEnvironment
                         RequestPath = (string)value;
                         return true;
                     }
-                    if (string.Equals(key, "owin.RequestBody", StringComparison.Ordinal)) 
-                    {
-                        _flag0 |= 0x100u;
-                        RequestBody = (object)value;
-                        return true;
-                    }
                     if (string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x400u;
+                        _flag0 |= 0x80u;
                         HostTraceOutput = (TextWriter)value;
                         return true;
                     }
@@ -428,25 +373,25 @@ namespace Katana.Server.AspNet.CallEnvironment
                     }
                     if (string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x2000u;
+                        _flag0 |= 0x400u;
                         ServerVariableRemoteAddr = (string)value;
                         return true;
                     }
                     if (string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x4000u;
+                        _flag0 |= 0x800u;
                         ServerVariableRemoteHost = (string)value;
                         return true;
                     }
                     if (string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x8000u;
+                        _flag0 |= 0x1000u;
                         ServerVariableRemotePort = (string)value;
                         return true;
                     }
                     if (string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x20000u;
+                        _flag0 |= 0x4000u;
                         ServerVariableServerPort = (string)value;
                         return true;
                     }
@@ -467,32 +412,10 @@ namespace Katana.Server.AspNet.CallEnvironment
                         return true;
                     }
                    break;
-                case 19:
-                    if (string.Equals(key, "owin.RequestHeaders", StringComparison.Ordinal)) 
-                    {
-                        _flag0 |= 0x80u;
-                        RequestHeaders = (IDictionary<string, string[]>)value;
-                        return true;
-                    }
-                   break;
-                case 17:
-                    if (string.Equals(key, "host.CallDisposed", StringComparison.Ordinal)) 
-                    {
-                        _flag0 |= 0x200u;
-                        HostCallDisposed = (CancellationToken)value;
-                        return true;
-                    }
-                    if (string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
-                    {
-                        _flag0 |= 0x10000u;
-                        ServerVariableLocalAddr = (string)value;
-                        return true;
-                    }
-                   break;
                 case 29:
                     if (string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x800u;
+                        _flag0 |= 0x100u;
                         HostDisableResponseBuffering = (Action)value;
                         return true;
                     }
@@ -500,15 +423,23 @@ namespace Katana.Server.AspNet.CallEnvironment
                 case 9:
                     if (string.Equals(key, "host.User", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x1000u;
+                        _flag0 |= 0x200u;
                         HostUser = (System.Security.Principal.IPrincipal)value;
+                        return true;
+                    }
+                   break;
+                case 17:
+                    if (string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
+                    {
+                        _flag0 |= 0x2000u;
+                        ServerVariableLocalAddr = (string)value;
                         return true;
                     }
                    break;
                 case 33:
                     if (string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x40000u;
+                        _flag0 |= 0x8000u;
                         RequestContext = (RequestContext)value;
                         return true;
                     }
@@ -516,7 +447,7 @@ namespace Katana.Server.AspNet.CallEnvironment
                 case 26:
                     if (string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
                     {
-                        _flag0 |= 0x80000u;
+                        _flag0 |= 0x10000u;
                         HttpContextBase = (HttpContextBase)value;
                         return true;
                     }
@@ -550,15 +481,9 @@ namespace Katana.Server.AspNet.CallEnvironment
                         RequestPath = default(string);
                         return true;
                     }
-                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "owin.RequestBody", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x100u;
-                        RequestBody = default(object);
-                        return true;
-                    }
-                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "host.TraceOutput", StringComparison.Ordinal)) 
-                    {
-                        _flag0 &= ~0x400u;
+                        _flag0 &= ~0x80u;
                         HostTraceOutput = default(TextWriter);
                         return true;
                     }
@@ -576,27 +501,27 @@ namespace Katana.Server.AspNet.CallEnvironment
                         RequestScheme = default(string);
                         return true;
                     }
-                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x400u) != 0) && string.Equals(key, "server.REMOTE_ADDR", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x2000u;
+                        _flag0 &= ~0x400u;
                         ServerVariableRemoteAddr = default(string);
                         return true;
                     }
-                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "server.REMOTE_HOST", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x4000u;
+                        _flag0 &= ~0x800u;
                         ServerVariableRemoteHost = default(string);
                         return true;
                     }
-                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "server.REMOTE_PORT", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x8000u;
+                        _flag0 &= ~0x1000u;
                         ServerVariableRemotePort = default(string);
                         return true;
                     }
-                    if (((_flag0 & 0x20000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x4000u) != 0) && string.Equals(key, "server.SERVER_PORT", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x20000u;
+                        _flag0 &= ~0x4000u;
                         ServerVariableServerPort = default(string);
                         return true;
                     }
@@ -617,56 +542,42 @@ namespace Katana.Server.AspNet.CallEnvironment
                         return true;
                     }
                    break;
-                case 19:
-                    if (((_flag0 & 0x80u) != 0) && string.Equals(key, "owin.RequestHeaders", StringComparison.Ordinal)) 
-                    {
-                        _flag0 &= ~0x80u;
-                        RequestHeaders = default(IDictionary<string, string[]>);
-                        return true;
-                    }
-                   break;
-                case 17:
-                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.CallDisposed", StringComparison.Ordinal)) 
-                    {
-                        _flag0 &= ~0x200u;
-                        HostCallDisposed = default(CancellationToken);
-                        return true;
-                    }
-                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
-                    {
-                        _flag0 &= ~0x10000u;
-                        ServerVariableLocalAddr = default(string);
-                        return true;
-                    }
-                   break;
                 case 29:
-                    if (((_flag0 & 0x800u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x100u) != 0) && string.Equals(key, "host.DisableResponseBuffering", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x800u;
+                        _flag0 &= ~0x100u;
                         HostDisableResponseBuffering = default(Action);
                         return true;
                     }
                    break;
                 case 9:
-                    if (((_flag0 & 0x1000u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x200u) != 0) && string.Equals(key, "host.User", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x1000u;
+                        _flag0 &= ~0x200u;
                         HostUser = default(System.Security.Principal.IPrincipal);
                         return true;
                     }
                    break;
-                case 33:
-                    if (((_flag0 & 0x40000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
+                case 17:
+                    if (((_flag0 & 0x2000u) != 0) && string.Equals(key, "server.LOCAL_ADDR", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x40000u;
+                        _flag0 &= ~0x2000u;
+                        ServerVariableLocalAddr = default(string);
+                        return true;
+                    }
+                   break;
+                case 33:
+                    if (((_flag0 & 0x8000u) != 0) && string.Equals(key, "System.Web.Routing.RequestContext", StringComparison.Ordinal)) 
+                    {
+                        _flag0 &= ~0x8000u;
                         RequestContext = default(RequestContext);
                         return true;
                     }
                    break;
                 case 26:
-                    if (((_flag0 & 0x80000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
+                    if (((_flag0 & 0x10000u) != 0) && string.Equals(key, "System.Web.HttpContextBase", StringComparison.Ordinal)) 
                     {
-                        _flag0 &= ~0x80000u;
+                        _flag0 &= ~0x10000u;
                         HttpContextBase = default(HttpContextBase);
                         return true;
                     }
@@ -707,53 +618,41 @@ namespace Katana.Server.AspNet.CallEnvironment
             }
             if (((_flag0 & 0x80u) != 0))
             {
-                yield return "owin.RequestHeaders";
+                yield return "host.TraceOutput";
             }
             if (((_flag0 & 0x100u) != 0))
             {
-                yield return "owin.RequestBody";
+                yield return "host.DisableResponseBuffering";
             }
             if (((_flag0 & 0x200u) != 0))
             {
-                yield return "host.CallDisposed";
+                yield return "host.User";
             }
             if (((_flag0 & 0x400u) != 0))
             {
-                yield return "host.TraceOutput";
+                yield return "server.REMOTE_ADDR";
             }
             if (((_flag0 & 0x800u) != 0))
             {
-                yield return "host.DisableResponseBuffering";
+                yield return "server.REMOTE_HOST";
             }
             if (((_flag0 & 0x1000u) != 0))
             {
-                yield return "host.User";
+                yield return "server.REMOTE_PORT";
             }
             if (((_flag0 & 0x2000u) != 0))
             {
-                yield return "server.REMOTE_ADDR";
+                yield return "server.LOCAL_ADDR";
             }
             if (((_flag0 & 0x4000u) != 0))
             {
-                yield return "server.REMOTE_HOST";
+                yield return "server.SERVER_PORT";
             }
             if (((_flag0 & 0x8000u) != 0))
             {
-                yield return "server.REMOTE_PORT";
-            }
-            if (((_flag0 & 0x10000u) != 0))
-            {
-                yield return "server.LOCAL_ADDR";
-            }
-            if (((_flag0 & 0x20000u) != 0))
-            {
-                yield return "server.SERVER_PORT";
-            }
-            if (((_flag0 & 0x40000u) != 0))
-            {
                 yield return "System.Web.Routing.RequestContext";
             }
-            if (((_flag0 & 0x80000u) != 0))
+            if (((_flag0 & 0x10000u) != 0))
             {
                 yield return "System.Web.HttpContextBase";
             }
@@ -791,53 +690,41 @@ namespace Katana.Server.AspNet.CallEnvironment
             }
             if (((_flag0 & 0x80u) != 0))
             {
-                yield return RequestHeaders;
+                yield return HostTraceOutput;
             }
             if (((_flag0 & 0x100u) != 0))
             {
-                yield return RequestBody;
+                yield return HostDisableResponseBuffering;
             }
             if (((_flag0 & 0x200u) != 0))
             {
-                yield return HostCallDisposed;
+                yield return HostUser;
             }
             if (((_flag0 & 0x400u) != 0))
             {
-                yield return HostTraceOutput;
+                yield return ServerVariableRemoteAddr;
             }
             if (((_flag0 & 0x800u) != 0))
             {
-                yield return HostDisableResponseBuffering;
+                yield return ServerVariableRemoteHost;
             }
             if (((_flag0 & 0x1000u) != 0))
             {
-                yield return HostUser;
+                yield return ServerVariableRemotePort;
             }
             if (((_flag0 & 0x2000u) != 0))
             {
-                yield return ServerVariableRemoteAddr;
+                yield return ServerVariableLocalAddr;
             }
             if (((_flag0 & 0x4000u) != 0))
             {
-                yield return ServerVariableRemoteHost;
+                yield return ServerVariableServerPort;
             }
             if (((_flag0 & 0x8000u) != 0))
             {
-                yield return ServerVariableRemotePort;
-            }
-            if (((_flag0 & 0x10000u) != 0))
-            {
-                yield return ServerVariableLocalAddr;
-            }
-            if (((_flag0 & 0x20000u) != 0))
-            {
-                yield return ServerVariableServerPort;
-            }
-            if (((_flag0 & 0x40000u) != 0))
-            {
                 yield return RequestContext;
             }
-            if (((_flag0 & 0x80000u) != 0))
+            if (((_flag0 & 0x10000u) != 0))
             {
                 yield return HttpContextBase;
             }
@@ -875,53 +762,41 @@ namespace Katana.Server.AspNet.CallEnvironment
             }
             if (((_flag0 & 0x80u) != 0))
             {
-                yield return new KeyValuePair<string,object>("owin.RequestHeaders", RequestHeaders);
+                yield return new KeyValuePair<string,object>("host.TraceOutput", HostTraceOutput);
             }
             if (((_flag0 & 0x100u) != 0))
             {
-                yield return new KeyValuePair<string,object>("owin.RequestBody", RequestBody);
+                yield return new KeyValuePair<string,object>("host.DisableResponseBuffering", HostDisableResponseBuffering);
             }
             if (((_flag0 & 0x200u) != 0))
             {
-                yield return new KeyValuePair<string,object>("host.CallDisposed", HostCallDisposed);
+                yield return new KeyValuePair<string,object>("host.User", HostUser);
             }
             if (((_flag0 & 0x400u) != 0))
             {
-                yield return new KeyValuePair<string,object>("host.TraceOutput", HostTraceOutput);
+                yield return new KeyValuePair<string,object>("server.REMOTE_ADDR", ServerVariableRemoteAddr);
             }
             if (((_flag0 & 0x800u) != 0))
             {
-                yield return new KeyValuePair<string,object>("host.DisableResponseBuffering", HostDisableResponseBuffering);
+                yield return new KeyValuePair<string,object>("server.REMOTE_HOST", ServerVariableRemoteHost);
             }
             if (((_flag0 & 0x1000u) != 0))
             {
-                yield return new KeyValuePair<string,object>("host.User", HostUser);
+                yield return new KeyValuePair<string,object>("server.REMOTE_PORT", ServerVariableRemotePort);
             }
             if (((_flag0 & 0x2000u) != 0))
             {
-                yield return new KeyValuePair<string,object>("server.REMOTE_ADDR", ServerVariableRemoteAddr);
+                yield return new KeyValuePair<string,object>("server.LOCAL_ADDR", ServerVariableLocalAddr);
             }
             if (((_flag0 & 0x4000u) != 0))
             {
-                yield return new KeyValuePair<string,object>("server.REMOTE_HOST", ServerVariableRemoteHost);
+                yield return new KeyValuePair<string,object>("server.SERVER_PORT", ServerVariableServerPort);
             }
             if (((_flag0 & 0x8000u) != 0))
             {
-                yield return new KeyValuePair<string,object>("server.REMOTE_PORT", ServerVariableRemotePort);
-            }
-            if (((_flag0 & 0x10000u) != 0))
-            {
-                yield return new KeyValuePair<string,object>("server.LOCAL_ADDR", ServerVariableLocalAddr);
-            }
-            if (((_flag0 & 0x20000u) != 0))
-            {
-                yield return new KeyValuePair<string,object>("server.SERVER_PORT", ServerVariableServerPort);
-            }
-            if (((_flag0 & 0x40000u) != 0))
-            {
                 yield return new KeyValuePair<string,object>("System.Web.Routing.RequestContext", RequestContext);
             }
-            if (((_flag0 & 0x80000u) != 0))
+            if (((_flag0 & 0x10000u) != 0))
             {
                 yield return new KeyValuePair<string,object>("System.Web.HttpContextBase", HttpContextBase);
             }

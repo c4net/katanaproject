@@ -14,11 +14,18 @@ namespace Katana.Server.AspNet.Tests
         protected bool WasCalled;
         protected IDictionary<string, object> WasCalledEnvironment;
 
-        protected void WasCalledApp(IDictionary<string, object> env, ResultDelegate result, Action<Exception> fault)
+        protected Task<ResultParameters> WasCalledApp(CallParameters call)
         {
             WasCalled = true;
-            WasCalledEnvironment = env;
-            result("200 OK", new Dictionary<string, string[]>(), (write, end, cancel) => end(null));
+            WasCalledEnvironment = call.Environment;
+            return TaskHelpers.FromResult(
+                new ResultParameters
+                    {
+                        Properties = new Dictionary<string, object>(),
+                        Status = 200,
+                        Headers = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase),
+                        Body = (stream, cancel) => TaskHelpers.Completed(),
+                    });
         }
 
         protected FakeHttpContext NewHttpContext(Uri url, string method = "GET")
@@ -40,7 +47,7 @@ namespace Katana.Server.AspNet.Tests
 
         protected Task ExecuteRequestContext(RequestContext requestContext)
         {
-            var httpHandler = (OwinHttpHandler) requestContext.RouteData.RouteHandler.GetHttpHandler(requestContext);
+            var httpHandler = (OwinHttpHandler)requestContext.RouteData.RouteHandler.GetHttpHandler(requestContext);
             var task = Task.Factory.FromAsync(httpHandler.BeginProcessRequest, httpHandler.EndProcessRequest,
                                               requestContext.HttpContext, null);
             return task;

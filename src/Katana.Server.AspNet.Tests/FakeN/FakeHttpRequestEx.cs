@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using FakeN.Web;
 
 namespace Katana.Server.AspNet.Tests.FakeN
@@ -8,7 +9,10 @@ namespace Katana.Server.AspNet.Tests.FakeN
         public FakeHttpRequestEx(Uri url = null, string method = "GET")
             : base(url, method)
         {
+            Body = new MemoryStream();
         }
+
+        public MemoryStream Body { get; set; }
 
         public override string AppRelativeCurrentExecutionFilePath
         {
@@ -37,6 +41,11 @@ namespace Katana.Server.AspNet.Tests.FakeN
         public override bool IsSecureConnection
         {
             get { return false; }
+        }
+
+        public override Stream InputStream
+        {
+            get { return Body; }
         }
     }
 }
