@@ -17,12 +17,17 @@ namespace Katana.WebApi.CallHeaders
 
         protected override HttpHeaders MessageHeaders
         {
-            get { return _message.Headers; }
+            get { return Message.Headers; }
         }
 
         protected override HttpHeaders ContentHeaders
         {
-            get { return _message.Content != null ? _message.Content.Headers : null; }
+            get { return Message.Content != null ? Message.Content.Headers : null; }
+        }
+
+        public HttpRequestMessage Message
+        {
+            get { return _message; }
         }
     }
 }
