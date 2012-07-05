@@ -15,25 +15,16 @@ namespace Katana.WebApi
             _app = app;
         }
 
+        public static HttpMessageHandler Create(AppDelegate app)
+        {
+            return new CallAppDelegate(app);
+        }
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var tcs = new TaskCompletionSource<HttpResponseMessage>();
-            var env = Utils.GetOwinEnvironment(request);
-            _app.Invoke(
-                env,
-                (status, headers, body) =>
-                {
-                    try
-                    {
-                        tcs.SetResult(Utils.GetResponseMessage(env, status, headers, body));
-                    }
-                    catch (Exception ex)
-                    {
-                        tcs.SetException(ex);
-                    }
-                },
-                tcs.SetException);
-            return tcs.Task;
+            return Adapters.GetCallParameters(request)
+                .Then(call => _app.Invoke(call)
+                    .Then(result => Utils.GetResponseMessage(result)));
         }
     }
 }

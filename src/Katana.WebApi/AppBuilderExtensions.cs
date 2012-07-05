@@ -14,19 +14,19 @@ namespace Katana.WebApi
 
         public static IAppBuilder UseMessageHandler(this IAppBuilder builder, Func<HttpMessageHandler, HttpMessageHandler> middleware)
         {
-            AddAdapters(builder);
+            builder.AddAdapters(Adapters.Adapter1, Adapters.Adapter2);
             return builder.Use(middleware);
         }
 
         public static IAppBuilder UseMessageHandler<T>(this IAppBuilder builder) where T : HttpMessageHandler
         {
-            AddAdapters(builder);
+            builder.AddAdapters(Adapters.Adapter1, Adapters.Adapter2);
             return builder.Use<HttpMessageHandler>(app => CreateMessageHandler(typeof(T), new[] { typeof(HttpMessageHandler) }, new object[] { app }));
         }
 
         public static IAppBuilder UseMessageHandler<T, T1>(this IAppBuilder builder, T1 t1) where T : HttpMessageHandler
         {
-            AddAdapters(builder);
+            builder.AddAdapters(Adapters.Adapter1, Adapters.Adapter2);
             return builder.Use<HttpMessageHandler>(app => CreateMessageHandler(typeof(T), new[] { typeof(HttpMessageHandler), typeof(T1) }, new object[] { app, t1 }));
         }
 
@@ -40,13 +40,6 @@ namespace Katana.WebApi
             }
             var handler = constructorInfo.Invoke(parameters);
             return (HttpMessageHandler)handler;
-        }
-
-        static void AddAdapters(this IAppBuilder builder)
-        {
-            builder.AddAdapters<AppDelegate, HttpMessageHandler>(
-                app => new CallAppDelegate(app),
-                handler => new CallMessageHandler(handler).Send);
         }
     }
 }

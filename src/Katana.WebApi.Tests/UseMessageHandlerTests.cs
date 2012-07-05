@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Gate.Builder;
@@ -33,38 +34,32 @@ namespace Katana.WebApi.Tests
 
             builder.UseMessageHandler<HelloWorldHandler>();
 
-            var app = builder.Materialize();
+            var app = builder.Materialize<AppDelegate>();
 
             var env = new Dictionary<string, object>
-                          {
-                              {"owin.Version", "1.0"},
-                              {"owin.RequestMethod", "GET"},
-                              {"owin.RequestScheme", "http"},
-                              {"owin.RequestPathBase", ""},
-                              {"owin.RequestPath", "/"},
-                              {"owin.RequestQueryString", ""},
-                              {"owin.RequestHeaders", new Dictionary<string, string[]>()},
-                              {"owin.RequestBody", new BodyDelegate((write, end, cancel) => end(null))},
-                          };
+            {
+                {"owin.Version", "1.0"},
+                {"owin.RequestMethod", "GET"},
+                {"owin.RequestScheme", "http"},
+                {"owin.RequestPathBase", ""},
+                {"owin.RequestPath", "/"},
+                {"owin.RequestQueryString", ""},
+            };
 
-            var tcs = new TaskCompletionSource<object>();
-            app.Invoke(
-                env,
-                (status, headers, body) =>
+            return app.Invoke(
+                new CallParameters
                 {
-                    try
+                    Environment = env,
+                    Headers = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase),
+                    Body = new MemoryStream()
+                }).Then(result =>
+                {
+                    result.Status.ShouldBe(200);
+                    result.Headers["Content-Type"].ShouldBe(new[]
                     {
-                        status.ShouldBe("200 OK");
-                        headers["Content-Type"].ShouldBe(new[] { "text/plain; charset=utf-8" });
-                        tcs.SetResult(null);
-                    }
-                    catch (Exception ex)
-                    {
-                        tcs.SetException(ex);
-                    }
-                },
-                tcs.SetException);
-            return tcs.Task;
+                        "text/plain; charset=utf-8"
+                    });
+                });
         }
     }
 }
