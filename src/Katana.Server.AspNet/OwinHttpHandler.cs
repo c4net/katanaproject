@@ -76,7 +76,7 @@ namespace Katana.Server.AspNet
             }
             catch (Exception ex)
             {
-                callContext.Complete(true, ex);
+                callContext.Complete(false, ex);
             }
             return callContext;
         }

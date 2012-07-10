@@ -23,67 +23,40 @@ namespace Katana.WebApi
         }
 
 
-        public static HttpResponseMessage GetResponseMessage(ResultParameters result)
+        public static HttpResponseMessage GetResponseMessage(HttpRequestMessage request, ResultParameters result, CancellationToken cancellationToken)
         {
-            HttpResponseMessage responseMessage;
-
-            var responseHeadersWrapper = result.Headers as ResponseHeadersWrapper;
-            if (responseHeadersWrapper != null)
+            var responseMessage = new HttpResponseMessage((HttpStatusCode)result.Status)
             {
-                responseMessage = responseHeadersWrapper.ResponseMessage;
-            }
-            else
+                RequestMessage = request,
+                Content = new BodyDelegateContent(result.Body, cancellationToken)
+            };
+            foreach (var header in result.Headers)
             {
-                responseMessage = new HttpResponseMessage((HttpStatusCode)result.Status);
-
+                if (!responseMessage.Headers.TryAddWithoutValidation(header.Key, header.Value))
+                {
+                    if (responseMessage.Content != null)
+                    {
+                        responseMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                    }
+                }
             }
-            //responseMessage.Content = new StreamContent(result.Body);
+            object value;
+            if (result.Properties != null && result.Properties.TryGetValue("owin.ReasonPhrase", out value))
+            {
+                responseMessage.ReasonPhrase = Convert.ToString(value);
+            }
+
             return responseMessage;
-            //if (result.Headers is (ResponseHeadersWrapper))
-            //var responseMessage = Get<HttpResponseMessage>(env, "System.Net.Http.HttpResponseMessage");
-            //if (responseMessage != null)
-            //{
-            //    return responseMessage;
-            //}
-
-            //var request = Adapters.GetRequestMessage(call);
-
-            //int statusCode;
-            //if (status == null || !int.TryParse(status.Substring(0, 3), out statusCode))
-            //{
-            //    statusCode = 500;
-            //}
-
-            //var message = new HttpResponseMessage((HttpStatusCode)statusCode)
-            //                  {
-            //                      RequestMessage = request,
-            //                      Content = new BodyStreamContent(body, GetCancellationToken(env))
-            //                  };
-
-            //if (status != null && status.Length > 4)
-            //{
-            //    message.ReasonPhrase = status.Substring(4);
-            //}
-
-            //foreach (var kv in headers)
-            //{
-            //    if (!message.Headers.TryAddWithoutValidation(kv.Key, kv.Value))
-            //    {
-            //        message.Content.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
-            //    }
-            //}
-
-            //return message;
         }
 
         public static ResultParameters GetResultParameters(HttpResponseMessage responseMessage)
         {
             return new ResultParameters
                        {
-                           Properties = new Dictionary<string, object>(),
                            Status = (int)responseMessage.StatusCode,
                            Headers = new ResponseHeadersWrapper(responseMessage),
-                           Body = (stream, cancel) => responseMessage.Content.CopyToAsync(stream)
+                           Body = (stream, cancel) => responseMessage.Content.CopyToAsync(stream),
+                           Properties = new Dictionary<string, object> { { "owin.ReasonPhrase", responseMessage.ReasonPhrase } },
                        };
         }
     }

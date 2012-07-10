@@ -22,9 +22,9 @@ namespace Katana.WebApi
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return Adapters.GetCallParameters(request)
+            return Adapters.GetCallParameters(request, cancellationToken)
                 .Then(call => _app.Invoke(call)
-                    .Then(result => Utils.GetResponseMessage(result)));
+                    .Then(result => Utils.GetResponseMessage(request, result, cancellationToken)));
         }
     }
 }

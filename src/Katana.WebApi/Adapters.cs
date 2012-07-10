@@ -105,7 +105,7 @@ namespace Katana.WebApi
         }
 
 
-        public static Task<CallParameters> GetCallParameters(HttpRequestMessage request)
+        public static Task<CallParameters> GetCallParameters(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var owinEnvironment = Utils.Get<IDictionary<string, object>>(request.Properties, "OwinEnvironment");
             var callCompleted = Utils.Get<CancellationToken>(request.Properties, "CallCompleted");

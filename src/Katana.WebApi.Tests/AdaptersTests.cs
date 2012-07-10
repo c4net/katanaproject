@@ -124,7 +124,7 @@ namespace Katana.WebApi.Tests
                 Body = new MemoryStream()
             };
             var message = Adapters.GetRequestMessage(call1);
-            return Adapters.GetCallParameters(message)
+            return Adapters.GetCallParameters(message, call1.Completed)
                 .Then(call2 =>
                 {
                     call2.Environment.ShouldBeSameAs(call1.Environment);
@@ -134,6 +134,48 @@ namespace Katana.WebApi.Tests
                     call2.Headers.ShouldContainKey("Host");
                     call2.Headers.ShouldContainKey("User-Agent");
                     call2.Headers.ShouldContainKey("Content-Type");
+                });
+        }
+
+        [Fact]
+        public Task ChangingStreamWillCauseNewContentButPreserveHeaders()
+        {
+            var call1 = new CallParameters
+            {
+                Environment = new Dictionary<string, object>
+                {
+                    {"owin.RequestMethod", "POST"},
+                    {"owin.RequestScheme", "http"},
+                    {"owin.RequestPathBase", ""},
+                    {"owin.RequestPath", "/"},
+                    {"owin.RequestQueryString", ""},                
+                },
+                Headers = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+                {
+                    {"Host", new[]{"testing"}},
+                    {"User-Agent", new []{"Alpha"}},
+                    {"Content-Type", new []{"text/plain"}},
+                },
+                Body = new MemoryStream()
+            };
+            var message1 = Adapters.GetRequestMessage(call1);
+            var content1 = message1.Content;
+            message1.Content.Headers.Add("x-custom", "delta");
+            return Adapters.GetCallParameters(message1, call1.Completed)
+                .Then(call2 =>
+                {
+                    call2.Body = new MemoryStream(new byte[] { 65, 66, 67 });
+                    var message2 = Adapters.GetRequestMessage(call2);
+                    
+                    message2.ShouldBeSameAs(message1);
+                    message2.Content.ShouldNotBeSameAs(content1);
+
+                    message2.Content.ReadAsStringAsync().Then(
+                        data =>
+                        {
+                            data.ShouldBe("ABC");
+                            message2.Content.Headers.ShouldContain(x => x.Key == "x-custom");
+                        });
                 });
         }
     }

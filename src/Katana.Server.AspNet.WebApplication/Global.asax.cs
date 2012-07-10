@@ -1,15 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Routing;
-using Gate.Middleware;
+//using Gate.Middleware;
 using Katana.WebApi;
 using Owin;
 using Gate;
 
 namespace Katana.Server.AspNet.WebApplication
 {
+    public static class Temp
+    {
+        public static IAppBuilder UseShowExceptions(this IAppBuilder builder)
+        {
+            return builder;
+        }
+    }
+
+    public static class Wilson
+    {
+        public static AppDelegate App()
+        {
+            return call =>
+            {
+                var req = new Request(call);
+                var resp = new Response(200, Headers.New().SetHeader("Content-Type", "text/html"));
+                resp.StartAsync().Then(() => resp.Write("Hello world"));
+                return resp.GetResultAsync();
+            };
+        }
+    }
+
     public class Global : System.Web.HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e)
@@ -17,10 +41,10 @@ namespace Katana.Server.AspNet.WebApplication
             RouteTable.Routes.MapOwinRoute("/crash", builder => builder
                 .UseShowExceptions()
                 .UseMessageHandler(new TraceRequestFilter())
-                .RunDirect(SampleTwo));
+                .UseDirect(SampleTwo));
 
             RouteTable.Routes.MapOwinRoute("/show", builder => builder
-                .RunDirect(Show));
+                .UseDirect(Show));
 
             RouteTable.Routes.MapOwinRoute("/wilson", builder => builder
                 .UseShowExceptions()
@@ -59,7 +83,7 @@ namespace Katana.Server.AspNet.WebApplication
 
             RouteTable.Routes.MapOwinRoute("/", builder => builder
                 .UseShowExceptions()
-                .UseMessageHandler<TraceRequestFilter>()
+                .UseMessageHandler(new TraceRequestFilter())
                 .Run(DefaultApp));
 
         }
@@ -75,17 +99,17 @@ namespace Katana.Server.AspNet.WebApplication
             builder.Run(Wilson.App());
         }
 
-        private void Show(Request req, Response res)
+        private Task Show(Request req, Response res)
         {
             res.ContentType = "text/plain";
-            res.Start(
+            return res.StartAsync().Then(
                 () =>
                 {
                     res.Write("Hello World\r\n");
                     res.Write("PathBase: {0}\r\n", req.PathBase);
                     res.Write("Path: {0}\r\n", req.Path);
                     res.Write("<ul>");
-                    foreach (var kv in req)
+                    foreach (var kv in req.Environment)
                     {
                         res.Write("<li>");
                         res.Write(kv.Key);
@@ -94,21 +118,20 @@ namespace Katana.Server.AspNet.WebApplication
                         res.Write("</li>");
                     }
                     res.Write("</ul>");
-                    res.End();
                 });
         }
 
-        private void SampleTwo(Request req, Response res)
+        private Task SampleTwo(Request req, Response res)
         {
             res.ContentType = "text/html";
-            res.Start(
+            return res.StartAsync().Then(
                 () =>
                 {
                     res.Write("Hello World\r\n");
                     res.Write("PathBase: {0}\r\n", req.PathBase);
                     res.Write("Path: {0}\r\n", req.Path);
                     res.Write("<ul>");
-                    foreach (var kv in req)
+                    foreach (var kv in req.Environment)
                     {
                         res.Write("<li>");
                         res.Write(kv.Key);
@@ -118,28 +141,29 @@ namespace Katana.Server.AspNet.WebApplication
                     }
                     res.Write("</ul>");
                     throw new Exception("Boom");
-                    res.End();
                 });
         }
 
-        private void DefaultApp(IDictionary<string, object> env, ResultDelegate result, Action<Exception> fault)
-        {
-            var req = new Request(env);
-            result(
-                "200 OK",
-                new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
-                    {
-                        {"Content-Type", new[] {"text/plain"}}
-                    },
-                (write, end, cancel) =>
-                {
-                    Action<string> writeText = text => write(new ArraySegment<byte>(Encoding.UTF8.GetBytes(text)), null);
 
-                    writeText("Hello world\r\n");
-                    writeText("PathBase: " + req.PathBase + "\r\n");
-                    writeText("Path: " + req.Path + "\r\n");
-                    end(null);
-                });
+        private Task<ResultParameters> DefaultApp(CallParameters call)
+        {
+            var req = new Request(call);
+            return TaskHelpers.FromResult(new ResultParameters
+            {
+                Status = 200,
+                Headers = Headers.New().SetHeader("Content-Type", "text/plain"),
+                Body = (output, cancel) =>
+                {
+                    using (var writer = new StreamWriter(output, Encoding.UTF8))
+                    {
+                        writer.WriteLine("Hello world\r\n");
+                        writer.WriteLine("PathBase: {0}", req.PathBase);
+                        writer.WriteLine("Path: {0}", req.Path);
+                    }
+                    return TaskHelpers.Completed();
+                },
+                Properties = new Dictionary<string, object>()
+            });
         }
     }
 }
