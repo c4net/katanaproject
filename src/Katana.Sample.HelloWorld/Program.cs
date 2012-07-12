@@ -1,6 +1,10 @@
 ﻿namespace Katana.Sample.HelloWorld
 {
     using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Gate;
     using Katana.Engine;
     using Katana.Engine.Settings;
     using Owin;
@@ -37,7 +41,34 @@
         public void Configuration(IAppBuilder builder)
         {
             // TODO: Waiting for OWIN breaking changes to be fixed in Gate.Middleware.
-            // builder.UseShowExceptions().Run(Wilson.App);
+            builder.UseShowExceptions().Use<AppDelegate>(_ => Wilson.App());
+        }
+    }
+
+    public static class Temp
+    {
+        public static IAppBuilder UseShowExceptions(this IAppBuilder builder)
+        {
+            return builder;
+        }
+    }
+
+    public static class Wilson
+    {
+        public static AppDelegate App()
+        {
+            return async call =>
+            {
+                var req = new Request(call);
+                var resp = new Response();
+                resp.Headers.SetHeader("Content-Type", "text/plain");
+                
+                await resp.WriteAsync("Hello world\r\n");
+                await resp.WriteAsync("PathBase {0}\r\n", req.PathBase);
+                await resp.WriteAsync("Path {0}\r\n", req.Path);
+
+                return await resp.GetResultAsync();
+            };
         }
     }
 }

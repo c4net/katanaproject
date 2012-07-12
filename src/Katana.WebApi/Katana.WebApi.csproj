@@ -80,6 +80,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MessageHeadersWrapper.Generated.cs</LastGenOutput>
     </None>
+    <None Include="Katana.WebApi.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

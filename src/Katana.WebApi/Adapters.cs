@@ -41,8 +41,8 @@ namespace Katana.WebApi
 
                 // if a single host header is available
                 string[] hostAndPort;
-                if (call.Headers.TryGetValue("Host", out hostAndPort) && 
-                    hostAndPort != null && 
+                if (call.Headers.TryGetValue("Host", out hostAndPort) &&
+                    hostAndPort != null &&
                     hostAndPort.Length == 1 &&
                     !String.IsNullOrWhiteSpace(hostAndPort[0]))
                 {
@@ -72,30 +72,48 @@ namespace Katana.WebApi
                 requestMessage = new HttpRequestMessage(new HttpMethod(requestMethod), uriBuilder.Uri);
                 call.Environment["System.Net.Http.HttpRequestMessage"] = requestMessage;
 
-                requestMessage.Content = new BodyStreamContent(call.Body);
+                if (call.Body != null)
+                {
+                    requestMessage.Content = new BodyStreamContent(call.Body);
+                }
 
                 foreach (var kv in call.Headers)
                 {
                     if (!requestMessage.Headers.TryAddWithoutValidation(kv.Key, kv.Value))
                     {
-                        requestMessage.Content.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
+                        if (requestMessage.Content != null)
+                        {
+                            requestMessage.Content.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
+                        }
                     }
                 }
             }
 
             var bodyStreamContent = requestMessage.Content as BodyStreamContent;
-            if (bodyStreamContent == null || !ReferenceEquals(bodyStreamContent.Body, call.Body))
+
+            var sameBody =
+                (bodyStreamContent == null && call.Body == null) ||
+                (bodyStreamContent != null && ReferenceEquals(bodyStreamContent.Body, call.Body));
+
+            if (!sameBody)
             {
-                // body stream has been substituted
-                var callBodyContent = new BodyStreamContent(call.Body);
-                if (requestMessage.Content != null)
+                if (call.Body == null)
                 {
-                    foreach (var kv in requestMessage.Content.Headers)
-                    {
-                        callBodyContent.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
-                    }
+                    requestMessage.Content = null;
                 }
-                requestMessage.Content = callBodyContent;
+                else
+                {
+                    // body stream has been substituted
+                    var callBodyContent = new BodyStreamContent(call.Body);
+                    if (requestMessage.Content != null)
+                    {
+                        foreach (var kv in requestMessage.Content.Headers)
+                        {
+                            callBodyContent.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
+                        }
+                    }
+                    requestMessage.Content = callBodyContent;
+                }
             }
 
 
@@ -115,14 +133,27 @@ namespace Katana.WebApi
                 throw new InvalidOperationException("Running OWIN components over a Web API server is not currently supported");
             }
 
-            return request.Content.ReadAsStreamAsync()
-                .Then(stream => new CallParameters
+            if (request.Content != null)
+            {
+                return request.Content.ReadAsStreamAsync()
+                    .Then(stream => new CallParameters
+                    {
+                        Environment = owinEnvironment,
+                        Headers = new RequestHeadersWrapper(request),
+                        Body = stream,
+                        Completed = callCompleted
+                    });
+            }
+            else
+            {
+                return TaskHelpers.FromResult(new CallParameters
                 {
                     Environment = owinEnvironment,
                     Headers = new RequestHeadersWrapper(request),
-                    Body = stream,
+                    Body = null,
                     Completed = callCompleted
                 });
+            }
         }
     }
 }

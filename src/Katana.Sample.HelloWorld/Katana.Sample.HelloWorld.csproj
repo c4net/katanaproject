@@ -47,6 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\AppBuilderInlineExtensions.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\AppBuilderMapExtensions.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\AppBuilderRunExtensions.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\AppBuilderUseExtensions.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Headers.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Mapping\MapBuilder.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Mapping\UrlMapper.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\OwinConstants.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Request.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Response.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\ResponseStream.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Utils\Net40Extensions.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Utils\ParamDictionary.cs" />
+    <Compile Include="App_Packages\Gate.Sources.0.9-ctp3\Utils\ReasonPhrases.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.1-ctp1\TaskHelpers.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.1-ctp1\TaskHelpersExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

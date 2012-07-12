@@ -25,6 +25,7 @@
     <file src="NDesk.Options.dll" target="bin" />
     <file src="Owin.dll" target="bin" />
     <file src="Gate.Hosts.*.dll" target="bin" />
+    <file src="Katana.Server.*.dll" target="bin" />
     <file src="Kayak.dll" target="bin" />
     <file src="Firefly.dll" target="bin" />
     <file src="Manos.dll" target="bin" />

@@ -81,11 +81,12 @@ namespace Katana.Server.AspNet.WebApplication
             //simplest
             RouteTable.Routes.MapOwinRoute("/auth4", Auth4Pipeline);
 
+            RouteTable.Routes.MapOwinRoute("/", Startup.Configuration);
+
             RouteTable.Routes.MapOwinRoute("/", builder => builder
                 .UseShowExceptions()
                 .UseMessageHandler(new TraceRequestFilter())
                 .Run(DefaultApp));
-
         }
 
         //simplest

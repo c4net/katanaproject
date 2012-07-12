@@ -26,9 +26,7 @@ namespace Katana.WebApi
 
         public Task<ResultParameters> Send(CallParameters call)
         {
-            var requestMessage = Adapters.GetRequestMessage(call);
-
-            return _invoker.SendAsync(requestMessage, call.Completed)
+            return _invoker.SendAsync(Adapters.GetRequestMessage(call), call.Completed)
                 .Then(responseMessage => Utils.GetResultParameters(responseMessage), call.Completed);
         }
     }
