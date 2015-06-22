@@ -173,6 +173,12 @@ namespace Microsoft.Owin.Host.HttpListener.RequestProcessing
         public void SetServerUser(IPrincipal user)
         {
             _user = user;
+
+            //TODO - Review should it be passing in a null user?
+            if (user == null)
+            {
+                return;
+            }
             Thread.CurrentPrincipal = _user;
         }
 

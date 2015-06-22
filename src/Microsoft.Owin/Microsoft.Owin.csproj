@@ -66,6 +66,8 @@
     <Compile Include="IReadableStringCollection.cs" />
     <Compile Include="Loader\OwinStartupAttribute.cs" />
     <Compile Include="Extensions\PipelineStage.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\ConsoleLoggerFactory.cs" />
     <Compile Include="Mapping\MapExtensions.cs" />
     <Compile Include="Mapping\MapMiddleware.cs" />
     <Compile Include="Mapping\MapOptions.cs" />

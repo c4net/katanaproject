@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System;
-using System.IdentityModel.Tokens;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -70,6 +69,8 @@ namespace Microsoft.Owin.Security.DataHandler.Serializer
                 WriteWithDefault(writer, claim.OriginalIssuer, claim.Issuer);
             }
 
+            //TODO REVIEW
+            /*
             BootstrapContext bc = identity.BootstrapContext as BootstrapContext;
             if (bc == null || string.IsNullOrWhiteSpace(bc.Token))
             {
@@ -80,6 +81,8 @@ namespace Microsoft.Owin.Security.DataHandler.Serializer
                 writer.Write(bc.Token.Length);
                 writer.Write(bc.Token);
             }
+            */
+
             PropertiesSerializer.Write(writer, model.Properties);
         }
 
@@ -110,11 +113,14 @@ namespace Microsoft.Owin.Security.DataHandler.Serializer
                 claims[index] = new Claim(type, value, valueType, issuer, originalIssuer);
             }
             var identity = new ClaimsIdentity(claims, authenticationType, nameClaimType, roleClaimType);
-            int bootstrapContextSize = reader.ReadInt32();
+
+            /*
+            int bootstrapContextSize = reader.ReadInt32();            
             if (bootstrapContextSize > 0)
             {
                 identity.BootstrapContext = new BootstrapContext(reader.ReadString());
             }
+            */
 
             AuthenticationProperties properties = PropertiesSerializer.Read(reader);
             return new AuthenticationTicket(identity, properties);

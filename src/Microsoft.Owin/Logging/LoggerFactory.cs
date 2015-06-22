@@ -9,7 +9,7 @@ namespace Microsoft.Owin.Logging
     {
         static LoggerFactory()
         {
-            Default = new DiagnosticsLoggerFactory();
+            Default = new ConsoleLoggerFactory();
         }
 
         /// <summary>

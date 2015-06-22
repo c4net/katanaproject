@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
@@ -12,6 +11,7 @@ using Microsoft.Owin.Hosting.ServerFactory;
 using Microsoft.Owin.Hosting.Tracing;
 using Microsoft.Owin.Hosting.Utilities;
 using Microsoft.Owin.Logging;
+using System.Diagnostics;
 
 namespace Microsoft.Owin.Hosting.Engine
 {
@@ -78,7 +78,7 @@ namespace Microsoft.Owin.Hosting.Engine
         {
             ResolveOutput(context);
             InitializeBuilder(context);
-            EnableTracing(context);
+            //EnableTracing(context);
             IDisposable disposablePipeline = EnableDisposing(context);
             ResolveServerFactory(context);
             InitializeServerFactory(context);
@@ -296,11 +296,14 @@ namespace Microsoft.Owin.Hosting.Engine
                 return serverName;
             }
 
+            //TODO Disable for android support
+            /*
             serverName = Environment.GetEnvironmentVariable(Constants.EnvOwnServer, EnvironmentVariableTarget.Process);
             if (!string.IsNullOrWhiteSpace(serverName))
             {
                 return serverName;
             }
+            */
 
             return Constants.DefaultServer;
         }

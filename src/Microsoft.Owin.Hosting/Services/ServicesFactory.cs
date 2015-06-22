@@ -155,17 +155,8 @@ namespace Microsoft.Owin.Hosting.Services
             callback(typeof(IAppBuilderFactory), typeof(AppBuilderFactory));
             callback(typeof(IServerFactoryLoader), typeof(ServerFactoryLoader));
             callback(typeof(IServerFactoryActivator), typeof(ServerFactoryActivator));
-            callback(typeof(ILoggerFactory), typeof(InjectableDiagnosticsLoggerFactory));
+            callback(typeof(ILoggerFactory), typeof(ConsoleLoggerFactory));
         }
-
-        // StructureMap can't handle DiagnosticsLoggerFactory because it has two constructors
-        // and one of them has unregistered types. Make it to use the other constructor.
-        private class InjectableDiagnosticsLoggerFactory : DiagnosticsLoggerFactory
-        {
-            public InjectableDiagnosticsLoggerFactory()
-                : base()
-            {
-            }
-        }
+        
     }
 }
